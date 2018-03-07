@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="lib/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/css/kendo.common.min.css" rel="stylesheet">
+    <link href="lib/css/kendo.metro.min.css" rel="stylesheet">
+    <link href="lib/css/kendo.dataviz.min.css" rel="stylesheet">
+    <link href="lib/css/kendo.dataviz.metro.min.css" rel="stylesheet">
+
+    <script>window.$ = window.jQuery = require('./lib/js/jquery.min.js');</script>
+    <script>require('./lib/js/kendo.all.min.js')</script>
+    <script>require('./lib/js/kendo.aspnetmvc.min.js')</script>
+    <script>require('./lib/js/bootstrap.min.js')</script>
+    <script>window.chroma = require('./lib/js/chroma.min.js')</script>
+
+    <script src="regional-sales.js"></script>
+    <script src="products-orders.js"></script>
+    <script src="team-efficiency.js"></script>
+    <script src="about.js"></script>
+
+    <link href="Content/Site.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!--open container-->
+        <div class="row row-offcanvas row-offcanvas-left">
+            <!--open row-->
+            <div id="nav-section" class="col-xs-12 column">
+                <!--open nav column-->
+                <div class="navbar-default">
+                    <button id="toggle-button" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <h1 id="dash-logo" class="center-block">Northwind&#183;Dash</h1>
+                <div class="collapse navbar-collapse" id="sidebar-nav" role="navigation">
+                    <ul class="nav">
+                        <li id="regional-sales-status" class="active">
+                            <span class="icon icon-chart-column"></span>Regional Sales Status
+                        </li>
+                        <li id="products-and-orders">
+                            <span class="icon icon-star-empty"></span>Products &amp; Orders
+                        </li>
+                        <li id="team-efficiency">
+                            <span class="icon icon-faves"></span>Team Efficiency
+                        </li>
+                        <li id="about">
+                            <span class="icon icon-info"></span>About
+                        </li>
+                    </ul>
+                    <div id="rights">
+                        <p>Copyright &copy;
+                            <script type="text/javascript">document.write(new Date().getFullYear());</script>, Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+            <!--close left column-->
+            <div id="main-section" class="col-xs-12 column">
+                <div id="regional-sales-status-content-wrapper" class="activeWrapper"></div>
+                <div id="products-and-orders-content-wrapper" style="display:none"></div>
+                <div id="team-efficiency-content-wrapper" style="display:none"></div>
+                <div id="about-content-wrapper" style="display:none"></div>
+            </div>
+            <!--close main column-->
+        </div>
+        <!--close row-->
+    </div>
+    <!--close container-->
+
+
+    <script>
+        $(document).ready(function () {
+            $("#regional-sales-status-content-wrapper").load("regional-sales.html", function () {
+                onRegionalSales();
+            });
+
+            $("#products-and-orders-content-wrapper").load("products-orders.html", function () {
+                onProductsOrders();
+            });
+
+            $("#team-efficiency-content-wrapper").load("team-efficiency.html", function () {
+                onTeamEfficiency();
+            });
+
+            $("#about-content-wrapper").load("about.html", function () {
+                onAbout();
+            });
+
+            $("#regional-sales-status").on("click", function () {
+                $(".active").removeClass("active");
+                $(".activeWrapper").removeClass("activeWrapper").hide();
+
+                $("#regional-sales-status").addClass("active");
+                $("#regional-sales-status-content-wrapper").addClass("activeWrapper");
+
+                $("#regional-sales-status-content-wrapper").show();              
+                $(window).trigger("resize"); 
+            });
+
+            $("#products-and-orders").on("click", function () {
+                $(".active").removeClass("active");
+                $(".activeWrapper").removeClass("activeWrapper").hide();
+
+                $("#products-and-orders").addClass("active");
+                $("#products-and-orders-content-wrapper").addClass("activeWrapper");
+
+                $("#products-and-orders-content-wrapper").show();
+                $(window).trigger("resize"); 
+            });
+
+            $("#team-efficiency").on("click", function () {
+                $(".active").removeClass("active");
+                $(".activeWrapper").removeClass("activeWrapper").hide();
+
+                $("#team-efficiency").addClass("active");
+                $("#team-efficiency-content-wrapper").addClass("activeWrapper");
+
+                $("#team-efficiency-content-wrapper").show();
+                kendo.resize("#team-efficiency-content-wrapper");
+            });
+
+            $("#about").on("click", function () {
+                $(".active").removeClass("active");
+                $(".activeWrapper").removeClass("activeWrapper").hide();
+
+                $("#about").addClass("active");
+                $("#about-content-wrapper").addClass("activeWrapper");
+
+                $("#about-content-wrapper").show();
+                kendo.resize("#about-content-wrapper");
+            });            
+
+            $(window).resize(function(){
+                kendo.resize("#main-section");
+            });
+        });
+    </script>
+</body>
+
+</html>
+<script id="order-detail-template" type="text/x-kendo-tmpl">
+    <h4>Details for order \\##=OrderID# </h4>
+    <div class="tabstrip">
+        <ul>
+            <li class="k-state-active">
+                PRODUCTS
+            </li>
+            <li>
+                SHIPPING DETAILS
+            </li>
+        </ul>
+        <div class="details-grid">
+
+        </div>
+        <div>
+                <div class='shipping-details'>
+                    <ul>
+                        <li><label>Name:</label>#= ShipName #</li>
+                        <li><label>Country:</label>#= ShipCountry #</li>
+                        <li><label>City:</label>#= ShipCity #</li>
+                        <li><label>Address:</label>#= ShipAddress #</li>
+                        <li><label>Postal Code:</label>#= ShipPostalCode #</li>
+                    </ul>
+                </div>
+        </div>
+    </div>
+</script>
+<script id="product-detail-template" type="text/x-kendo-template">
+    <div id="product_detailtemplate_#=ProductID#" class="product-details-wrapper row">
+        <div class="product-details col-xs-3">
+            #if(ProductID) {#
+                <img src="./Content/Products/#=ProductID#.jpg" class="product-details-image">
+            #}#
+            <div class="product-name-cat">
+                <div class="product-name"></div>
+                <div class="product-category"></div>
+            </div>
+            </div>
+            <div class="product-details col-xs-3">
+                <h5>Orders QTY.</h5>
+                <div class="sparkline-container">
+                    <div class="details-sparkline"></div>
+                </div>
+                </div>
+                    <div class="product-details col-xs-1">
+                    <h5>In stock</h5>
+                    <span class="details-stock"></span>
+                </div>
+                <div class="product-details col-xs-1">
+                    <h5>In order</h5>
+                    <span class="details-orders"></span>
+                </div>
+                <div class="product-details col-xs-1">
+                    <h5>Reorder</h5>
+                    <span class="details-re-order"></span>
+                </div>
+                <div class="product-details col-xs-3">
+                    <h5>Qty. per unit</h5>
+                    <span class="details-re-order"></span><span class="product-metric">kg pkg.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/x-kendo-tmpl" id="employeeItemTemplate">
+    <div class="employee">
+        <div class="employee-wrapper">
+            <img src="./Content/Employees/#:EmployeeID#-t.png" class="img-responsive employee-list-image"/>
+                <dl class="employee-list-details">
+                    <dt class="name">#:FirstName# #:LastName# </dt>
+                    <dd class="title">#:Title# </dd>
+               </dl>
+           </div>
+        </div>
+</script>
+<script type="text/x-kendo-tmpl" id="employeeBioTemplate">
+    <div>
+        <h3>ABOUT</h3>
+        <img src="./Content/Employees/#:EmployeeID#.png" class="img-responsive employee-details-image" />
+        <dl class="employee-bio-details">
+            <dt class="name">#:FirstName# #:LastName#</dt>
+                <dd class="title">#:Title#</dd>
+                <dd class="phone"><span class="icon icon-mobile"></span>#:HomePhone#</dd>
+                <dd><a href='\\#' class='bioTooltip'> >>FULL BIO <span style='display:none;'>#:Notes#</span></a></dd>
+       </dl>
+    </div>
+</script>
