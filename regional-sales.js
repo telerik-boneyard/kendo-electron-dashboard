@@ -42,14 +42,18 @@ function onRegionalSales() {
         $('.row-offcanvas').toggleClass('active');
     });
 
-    $('#end-date').kendoDatePicker({
-        value: new Date(1998, 7, 1),
-        change: onCriteriaChange
-    })
-
     $('#start-date').kendoDatePicker({
         value: new Date(1996, 0, 1),
-        change: onCriteriaChange
+        min: new Date(1996, 0, 1),
+        max: new Date(1998, 5, 30),
+        change: startChange
+    })
+
+    $('#end-date').kendoDatePicker({
+        value: new Date(1998, 7, 9),
+        min: new Date(1996, 0, 1),
+        max: new Date(1998, 7, 9),
+        change: endChange
     })
 
     $("#map").kendoMap({
@@ -401,6 +405,48 @@ function onRegionalSales() {
         listCustomers(selectedCountry);
 
         setSparkLinesWidths();
+    }
+
+    function startChange(e) {
+        var StartDate = $("#start-date").data("kendoDatePicker");
+        var EndDate = $("#end-date").data("kendoDatePicker");
+        var startDate = StartDate.value();
+        var endDate = EndDate.value();
+
+        if (startDate) {
+            startDate = new Date(startDate);
+            startDate.setDate(startDate.getDate());
+            EndDate.min(startDate);
+        } else if (endDate) {
+            StartDate.max(new Date(endDate));
+        } else {
+            endDate = new Date();
+            StartDate.max(endDate);
+            EndDate.min(endDate);
+        }
+
+        onCriteriaChange();
+    }
+
+    function endChange(e) {
+        var StartDate = $("#start-date").data("kendoDatePicker");
+        var EndDate = $("#end-date").data("kendoDatePicker");
+        var startDate = StartDate.value();
+        var endDate = EndDate.value();
+
+        if (endDate) {
+            endDate = new Date(endDate);
+            endDate.setDate(endDate.getDate());
+            StartDate.max(endDate);
+        } else if (startDate) {
+            EndDate.min(new Date(startDate));
+        } else {
+            endDate = new Date();
+            StartDate.max(endDate);
+            EndDate.min(endDate);
+        }
+
+        onCriteriaChange();
     }
 
     function listCustomers(country) {

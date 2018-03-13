@@ -2,14 +2,14 @@
     <h2 id="team-efficiency" class="col-xs-3">Team efficiency</h2>
     <div id="dateFilter" class="col-xs-9">
         <div class="period-wrapper">
-            <label for="StartDate" class="select-period">Stats from</label>
-            <input id="StartDate" />
-            <span class="k-invalid-msg" data-for="StartDate"></span>
+            <label for="StartDateTeamEff" class="select-period">Stats from</label>
+            <input id="StartDateTeamEff" />
+            <span class="k-invalid-msg" data-for="StartDateTeamEff"></span>
         </div>
         <div class="period-wrapper">
-            <label for="EndDate" class="select-period">To</label>
-            <input id="EndDate" />
-            <span class="k-invalid-msg" data-for="EndDate"></span>
+            <label for="EndDateTeamEff" class="select-period">To</label>
+            <input id="EndDateTeamEff" />
+            <span class="k-invalid-msg" data-for="EndDateTeamEff"></span>
         </div>
     </div>
     <div style="clear:both;"></div>
@@ -43,8 +43,11 @@
                     </div>
                 </div>
             </div>
-            <div id="employeeStats" class="col-xs-12">
+            <div id="employeeStats" class="col-xs-12" style="height:200px">
                 <div id="team-sales" style="height:200px"></div>
+                <div id="team-sales-no-data" class="overlay" style="height:200px; position:relative">
+                    <div>No data available</div>
+                </div>
             </div>
             <div id="employeeSchedule" class="col-xs-12">
                 <h3>Representative orders - schedule</h3>

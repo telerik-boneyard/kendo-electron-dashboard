@@ -26,14 +26,18 @@ function onTeamEfficiency() {
     });
 
     function initWidgets() {
-        $("#StartDate").kendoDatePicker({
-            value: new Date(1996, 0, 1),
-            change: onCriteriaChange
+        $("#StartDateTeamEff").kendoDatePicker({
+            value: new Date(1997, 0, 1),
+            min: new Date(1996, 0, 1),
+            max: new Date(1997, 5, 30),
+            change: startChange
         })
 
-        $("#EndDate").kendoDatePicker({
-            value: new Date(1998, 7, 1),
-            change: onCriteriaChange
+        $("#EndDateTeamEff").kendoDatePicker({
+            value: new Date(1997, 5, 30),
+            min: new Date(1997, 0, 1),
+            max: new Date(1998, 5, 30),
+            change: endChange
         })
 
         $("#employees-list").kendoListView({
@@ -104,18 +108,14 @@ function onTeamEfficiency() {
             autoBind: false,
             dataBound: onAverageSalesDataBound,
             dataSource: {
-                transport: {
-                    read: function (options) {
-                        var result = $.grep(employeeAverageSales, function (e) {
-                            return e.EmployeeID == options.data.EmployeeID;
-                        });
-                        options.success(result);
+                data: employeeAverageSales,
+                schema:{
+                    model:{
+                        fields:{
+                            Date: {type: "date"}
+                        }
                     }
-                },
-                aggregate: [{
-                    field: "EmployeeSales",
-                    aggregate: "average"
-                }]
+                }
             },
             series: [{
                 type: "line",
@@ -166,18 +166,29 @@ function onTeamEfficiency() {
             dataSource: {
                 transport: {
                     read: function (options) {
-                        var result;
-                        var startDate = options.data.startDate;
-                        var endDate = options.data.endDate;
+                        var StartDateTeamEff = options.data.StartDateTeamEff;
+                        var EndDateTeamEff = options.data.EndDateTeamEff;
                         var employee = $.grep(employeeAndTeamSales, function (e) {
                             return e.EmployeeID == options.data.EmployeeID;
                         })[0];
-                        options.success(employee.Sales);
+                        options.success($.grep(employee.Sales, function(e){
+                            var date = kendo.parseDate(e.Date);
+                            if((date>StartDateTeamEff)&&(date<EndDateTeamEff)){
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }));
                     }
                 }
             },
             legend: {
                 position: "bottom"
+            },
+            dataBound: function(e){
+                var dataLength = e.sender.dataSource.view().length
+                $("#team-sales-no-data").toggle(dataLength === 0);
+                e.sender.element.toggle(!(dataLength === 0));
             },
             series: [{
                 field: "EmployeeSales",
@@ -318,12 +329,12 @@ function onTeamEfficiency() {
             employeeAverageSales = $("#employee-average-sales").data("kendoChart"),
             teamSales = $("#team-sales").data("kendoChart"),
             employeeSales = $("#employee-sales").data("kendoScheduler"),
-            startDate = $("#start-date").data("kendoDatePicker"),
-            endDate = $("#end-date").data("kendoDatePicker"),
+            StartDateTeamEff = $("#StartDateTeamEff").data("kendoDatePicker"),
+            EndDateTeamEff = $("#EndDateTeamEff").data("kendoDatePicker"),
             filter = {
                 EmployeeID: employee.EmployeeID,
-                startDate: kendo.format("{0:MM/dd/yyyy hh:mm:ss}", startDate.value()),
-                endDate: kendo.format("{0:MM/dd/yyyy hh:mm:ss}", endDate.value())
+                StartDateTeamEff: StartDateTeamEff.value(),
+                EndDateTeamEff: EndDateTeamEff.value()
             },
             template = kendo.template($("#employeeBioTemplate").html());
 
@@ -337,7 +348,67 @@ function onTeamEfficiency() {
 
         teamSales.dataSource.read(filter);
         employeeQuarterSales.dataSource.read(filter);
-        employeeAverageSales.dataSource.read(filter);
+        employeeAverageSales.dataSource.query({
+            filter: [{
+                field: "EmployeeID",
+                operator: "eq",
+                value: employee.EmployeeID
+            },{
+                field: "Date",
+                operator: "gte",
+                value: StartDateTeamEff.value()
+            }, {
+                field: "Date",
+                operator: "lte",
+                value: EndDateTeamEff.value()
+            }],
+            aggregate: [{
+                field: "EmployeeSales",
+                aggregate: "average"
+            }]
+        });
+    }
+
+    function startChange(e) {
+        var StartDateTeamEff = $("#StartDateTeamEff").data("kendoDatePicker");
+        var EndDateTeamEff = $("#EndDateTeamEff").data("kendoDatePicker");
+        var startDate = StartDateTeamEff.value();
+        var endDate = EndDateTeamEff.value();
+
+        if (startDate) {
+            startDate = new Date(startDate);
+            startDate.setDate(startDate.getDate());
+            EndDateTeamEff.min(startDate);
+        } else if (endDate) {
+            StartDateTeamEff.max(new Date(endDate));
+        } else {
+            endDate = new Date();
+            StartDateTeamEff.max(endDate);
+            EndDateTeamEff.min(endDate);
+        }
+
+        onCriteriaChange();
+    }
+
+    function endChange(e) {
+        var StartDateTeamEff = $("#StartDateTeamEff").data("kendoDatePicker");
+        var EndDateTeamEff = $("#EndDateTeamEff").data("kendoDatePicker");
+        var startDate = StartDateTeamEff.value();
+        var endDate = EndDateTeamEff.value();
+
+        if (endDate) {
+            endDate = new Date(endDate);
+            endDate.setDate(endDate.getDate());
+            StartDateTeamEff.max(endDate);
+        } else if (startDate) {
+            EndDateTeamEff.min(new Date(startDate));
+        } else {
+            endDate = new Date();
+            StartDateTeamEff.max(endDate);
+            EndDateTeamEff.min(endDate);
+        }
+
+        onCriteriaChange();
     }
 
     function onQuarterSalesDataBound(e) {
@@ -346,7 +417,7 @@ function onTeamEfficiency() {
     }
 
     function onAverageSalesDataBound(e) {
-        var data = this.dataSource.aggregates()
+        var data = this.dataSource.aggregates();
         if (data.EmployeeSales) {
             $("#employee-average-sales-label").text(kendo.toString(data.EmployeeSales.average, "c2"));
         } else {
