@@ -229,7 +229,7 @@ function onTeamEfficiency() {
 
         $("#employee-sales").kendoScheduler({
             autoBind: false,
-            date: new Date("1996, 7, 1"),
+            date: new Date("1997, 1, 1"),
             views: ["month"],
             editable: false,
             timezone: "Etc/UTC",
