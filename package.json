@@ -4,7 +4,10 @@
   "description": "Kendo UI Northwind Dashboard",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=Content/assets/KendoUI.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . electron-kendo-dashboard --overwrite --asar=true --platform=win32 --arch=ia32 --icon=Content/assets/KendoUI.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Kendo UI Northwind Dashboard\"",
+    "package-linux": "electron-packager . electron-kendo-dashboard --overwrite --asar=true --platform=linux --arch=x64 --icon=Content/assets/KendoUI.png --prune=true --out=release-builds"
   },
   "repository": "https://github.com/telerik/kendo-electron-dashboard",
   "keywords": [
@@ -15,6 +18,7 @@
   "author": "Progress",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "~1.7.8"
+    "electron": "~1.7.8",
+    "electron-packager": "^11.1.0"
   }
 }

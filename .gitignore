@@ -10,6 +10,7 @@
 
 # Build results
 
+release-builds
 [Dd]ebug/
 [Rr]elease/
 x64/

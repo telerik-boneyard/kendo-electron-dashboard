@@ -18,7 +18,7 @@ function createWindow() {
     height: 1200,
     show: false,
     title: "Kendo UI Northwind Dashboard",
-    icon: "Content/favicon.ico"
+    icon:  path.join(__dirname, 'Content/assets/KendoUI.png')
   })
 
   // and load the index.html of the app.
