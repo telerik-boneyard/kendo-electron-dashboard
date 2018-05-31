@@ -7,7 +7,7 @@ Kendo UI<sup>&reg;</sup> offers components for every need - from the must-have f
 <p>The sample app showcases some of the most popular Kendo UI widgets, such as Scheduler, Grid, TabStrip, Charts and Map in a real world scenario. It has a simple and responsive UI based on <a href="http://getbootstrap.com/">Bootstrap</a> and works on a wide range of devices.</p>
 <p>The sample app is aimed at executives, analysts, or sales representatives. It helps them establish targets based on insights into historical data as well as track sales and product performance in real time.</p>
 
-## Requirments
+## Requirements
 
 * [Kendo UI](https://www.telerik.com/kendo-ui)
 * [Git](https://git-scm.com)
