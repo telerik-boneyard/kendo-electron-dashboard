@@ -30,7 +30,7 @@ npm start
 
 Kendo UI Northwind Dashboard is configured to use the [Electron Packager](https://github.com/electron-userland/electron-packager) third-party packaging tool.
 
-To create new builds, run the following commands in the terminal in the `app` folder:
+To create new builds, run the following commands in the terminal in the app folder:
 
 ```bash
 #Install Electron packager for use in npm scripts
